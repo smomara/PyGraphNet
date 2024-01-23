@@ -2,8 +2,6 @@
 
 A simple python graphing library. Created so I can experiment while taking a graph theory course.
 
-# Getting started
-
 ## Installation
 
 ### From Source
