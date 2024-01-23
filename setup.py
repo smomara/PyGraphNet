@@ -9,6 +9,6 @@ setup(
     packages=find_packages(),
     install_requires=[
         'numpy',
-        'graphviz'  # Add other dependencies as needed
+        'graphviz'
     ]
 )
