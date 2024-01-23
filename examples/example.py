@@ -1,5 +1,4 @@
 from graphent.graph import Graph
-from graphent.edge import Edge
 from graphent.vertex import Vertex
 
 graph = Graph("G")
