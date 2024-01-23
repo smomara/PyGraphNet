@@ -1,5 +1,6 @@
 from graphent.graph import Graph
 from graphent.vertex import Vertex
+from graphent import visualize
 
 graph = Graph("G")
 
@@ -18,12 +19,17 @@ graph.add_edge('c', 'd')
 graph.add_edge('d', 'e')
 graph.add_edge('e', 'a')
 
-graph.visualize("example")
+visualize(graph, "example")
 
 complement = graph.get_complement()
-complement.visualize("complement")
+visualize(complement, "complement")
 
 if graph.are_isomorphic(complement):
     print("The graph and its complement are isomorphic")
 else:
     print("They are not isomorphic")
+
+graph.del_vertex('e')
+visualize(graph, "minus-e")
+
+print(f"Diameter of G: {graph.diameter()}")

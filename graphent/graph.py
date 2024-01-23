@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Union, Set
-from graphviz import Graph as GVGraph
 from itertools import permutations
+from collections import deque
 
 from graphent.vertex import Vertex
 from graphent.edge import Edge
@@ -17,20 +17,53 @@ class Graph:
             vertex = Vertex(vertex)
         self.vertices.add(vertex)
         return vertex
+    
+    def del_vertex(self, vertex: Union[Vertex, int, str, float]) -> None:
+        if not isinstance(vertex, Vertex):
+            for v in self.vertices:
+                if v.id == vertex:
+                    vertex = v
+                    break
+            else:
+                return
+        
+        edges_to_remove = [edge for edge in self.edges if vertex in edge]
+        for edge in edges_to_remove:
+            self.edges.remove(edge)
+        
+        self.vertices.remove(vertex)
 
-    def add_edge(self, u: Union[Vertex, int, str, float], v: Union[Vertex, int, str, float]) -> Edge:
-        u = self.add_vertex(u)
-        v = self.add_vertex(v)
-        edge = Edge(u, v)
+    def add_edge(self, u: Union[Edge, Vertex, int, str, float], v: Union[Vertex, int, str, float] = None) -> Edge:
+        if isinstance(u, Edge):
+            edge = u
+            self.add_vertex(edge.u)
+            self.add_vertex(edge.v)
+        else:
+            u_vertex = self.add_vertex(u)
+            v_vertex = self.add_vertex(v)
+            edge = Edge(u_vertex, v_vertex)
+
         if not self.is_edge(edge):
             self.edges.add(edge)
         return edge
     
+    def del_edge(self, u: Union[Edge, Vertex, int, str, float], v: Union[Vertex, int, str, float] = None) -> None:
+        if isinstance(u, Edge):
+            edge = u
+            self.add_vertex(edge.u)
+            self.add_vertex(edge.v)
+        else:
+            u_vertex = self.add_vertex(u)
+            v_vertex = self.add_vertex(v)
+            edge = Edge(u_vertex, v_vertex)
+
+        for e in self.edges:
+            if e == edge:
+                self.edge.remove(e)
+                return
+    
     def is_edge(self, e: Edge) -> bool:
-        for edge in self.edges:
-            if edge == e:
-                return True
-        return False
+        return e in self.edges
 
     def get_complement(self) -> 'Graph':
         complement_graph = Graph(f"Complement of {self.id}")
@@ -38,12 +71,49 @@ class Graph:
         for vertex in self.vertices:
             complement_graph.add_vertex(vertex)
 
-        for u in self.vertices:
-            for v in self.vertices:
-                if u != v and not self.is_edge(Edge(u, v)):
+        sorted_vertices = sorted(self.vertices, key=lambda v: v.id)
+        for i, u in enumerate(sorted_vertices):
+            for v in sorted_vertices[i + 1:]:
+                if not self.is_edge(Edge(u, v)):
                     complement_graph.add_edge(u, v)
 
         return complement_graph
+    
+    def distance(self, u: Union[Vertex, float, int, str], v: Union[Vertex, float, int, str]) -> int:
+        if not isinstance(u, Vertex):
+            u = Vertex(u)
+        if not isinstance(v, Vertex):
+            v = Vertex(v)
+        if u == v:
+            return 0
+        
+        # BFS
+        # TODO: possible speedup?
+        visited = set()
+        queue = deque([(u, 0)])
+        while queue:
+            current_vertex, distance = queue.popleft()
+            if current_vertex == v:
+                return distance
+            
+            visited.add(current_vertex)
+            for edge in self.edges:
+                if edge.u == current_vertex and edge.v not in visited:
+                    queue.append((edge.v, distance+1))
+                elif edge.v == current_vertex and edge.u not in visited:
+                    queue.append((edge.u, distance+1))
+            
+        return float('inf') # return infinity if no path exists
+    
+    def diameter(self) -> int:
+        max_distance = 0
+        vertex_list = list(self.vertices) # convert set to list so it can be indexed to reduce run time
+        for i, u in enumerate(vertex_list):
+            for v in vertex_list[i+1:]:
+                if u != v:
+                    distance = self.distance(u, v)
+                    max_distance = max(max_distance, distance)
+        return max_distance
 
     def get_adjacency_matrix(self) -> np.ndarray:
         vertex_list = sorted(self.vertices)
@@ -84,20 +154,7 @@ class Graph:
             if np.array_equal(permuted, other_matrix):
                 return True
         return False
-
     
-    def visualize(self, filename='graph', format='png'):
-        dot = GVGraph(comment=f'Graph {self.id}')
-
-        for vertex in self.vertices:
-            dot.node(str(vertex.id))
-
-        for edge in self.edges:
-            dot.edge(str(edge.u.id), str(edge.v.id))
-
-        dot.render(filename, format=format, cleanup=True)
-        print(f"Graph rendered as {filename}.{format}")
-
     def __str__(self) -> str:
         vertices_str = ', '.join(str(v) for v in sorted(self.vertices))
         edges_str = ', '.join(str(e) for e in self.edges)

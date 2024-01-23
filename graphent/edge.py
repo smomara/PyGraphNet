@@ -10,6 +10,9 @@ class Edge:
 
     def __eq__(self, other: 'Edge') -> bool:
         return self.u == other.u and self.v == other.v or self.u == other.v and self.v == other.u
+
+    def __contains__(self, vertex: Vertex) -> bool:
+        return self.u == vertex or self.v == vertex
     
     def __hash__(self) -> int:
         return hash((self.u, self.v))
