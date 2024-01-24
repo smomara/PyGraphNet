@@ -30,6 +30,20 @@ class Graph:
     
     def size(self) -> int:
         return len(self.edges)
+    
+    def degree(self, vertex: Union[Vertex, int, str, float]) -> int:
+        if not isinstance(vertex, Vertex):
+            vertex = Vertex(vertex)
+
+        if vertex not in self.vertices:
+            raise ValueError("Vertex not in graph")
+
+        degree = 0
+        for edge in self.edges:
+            if vertex in edge:
+                degree += 1
+
+        return degree
 
     def add_vertex(self, vertex: Union[Vertex, int, str, float]) -> Vertex:
         if not isinstance(vertex, Vertex):
@@ -95,6 +109,36 @@ class Graph:
 
         return complement_graph
     
+    def geodesics(self, start: Union[Vertex, int, str, float], end: Union[Vertex, int, str, float]) -> list:
+        if not isinstance(start, Vertex):
+            start = Vertex(start)
+        if not isinstance(end, Vertex):
+            end = Vertex(end)
+
+        if start not in self.vertices or end not in self.vertices:
+            raise ValueError("Start or end vertex not in graph")
+
+        if start == end:
+            return [[start]]
+
+        paths = []
+        queue = deque([(start, [start])])
+        visited = {start: 0}
+
+        while queue:
+            current_vertex, path = queue.popleft()
+            if current_vertex == end:
+                paths.append(path)
+                continue
+
+            for edge in self.edges:
+                next_vertex = edge.v if edge.u == current_vertex else (edge.u if edge.v == current_vertex else None)
+                if next_vertex and (next_vertex not in visited or visited[next_vertex] == len(path)):
+                    visited[next_vertex] = len(path)
+                    queue.append((next_vertex, path + [next_vertex]))
+
+        return paths
+
     def distance(self, u: Union[Vertex, float, int, str], v: Union[Vertex, float, int, str]) -> int:
         if not isinstance(u, Vertex):
             u = Vertex(u)
@@ -144,7 +188,7 @@ class Graph:
 
     def incidence_matrix(self) -> np.ndarray:
         vertex_list = sorted(self.vertices)
-        edge_list = sorted(self.edges)
+        edge_list = sorted(self.edges) # need to sort so its same every time
         vertex_index_map = {v: i for i, v in enumerate(vertex_list)}
         edge_index_map = {e: i for i, e in enumerate(edge_list)}
         matrix = np.zeros((len(vertex_list), len(edge_list)), dtype=int)

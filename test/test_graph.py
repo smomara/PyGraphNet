@@ -17,6 +17,7 @@ class TestGraph(unittest.TestCase):
 
         self.assertEqual(g.order(), 3)
         self.assertEqual(g.size(), 2)
+        self.assertEqual(g.degree('b'), 2)
 
         self.assertTrue('c' in g)
         self.assertTrue(Edge('b', 'c') in g)
@@ -38,6 +39,8 @@ class TestGraph(unittest.TestCase):
         self.assertEqual(g.order(), 2)
         self.assertEqual(g.size(), 0)
 
+        self.assertEqual(g.degree('a'), 0)
+
     def test_complement(self):
         g = Graph("G", ['a', 'b'])
         complement = g.complement()
@@ -57,12 +60,15 @@ class TestGraph(unittest.TestCase):
 
         self.assertEqual(g.diameter(), 4)
         self.assertEqual(g.distance('a', 'c'), 2)
+        self.assertTrue(['a', 'b', 'c'] in g.geodesics('a', 'c'))
 
         g.add_edge('a', 'e')
         self.assertEqual(g.diameter(), 2)
         self.assertEqual(g.distance('a', 'e'), 1)
+        self.assertTrue(['a', 'e'] in g.geodesics('a', 'e'))
 
         self.assertEqual(g.distance('a', 'a'), 0)
+        self.assertTrue(['a'] in g.geodesics('a', 'a'))
     
     def test_matrices(self):
         vertices = ["a", "b", "c"]
