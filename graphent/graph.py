@@ -3,12 +3,64 @@ from typing import Union, Set, Optional, Iterable
 from itertools import permutations
 from collections import deque
 
-from graphent.vertex import Vertex
-from graphent.edge import Edge
+class Vertex:
+    def __init__(self, id: Union[int, str, float]) -> None:
+        if isinstance(id, str):
+            if len(id) > 1:
+                raise ValueError("id must be a single character string")
+            id = id.lower()
+        self.id = id
+
+    def __repr__(self) -> str:
+        return f"Vertex({self.id})"
+
+    def __lt__(self, other: Union['Vertex', int, float, str]) -> bool:
+        if not isinstance(other, Vertex):
+            other = Vertex(other)
+        
+        sid = self.id
+        oid = other.id
+        if isinstance(sid, str): sid = ord(sid)-ord('a') 
+        if isinstance(oid, str): oid = ord(oid)-ord('a')
+        return sid < oid
+
+    def __eq__(self, other: Union['Vertex', int, float, str]) -> bool:
+        if not isinstance(other, Vertex): other = Vertex(other)
+        return self.id == other.id
+
+    def __hash__(self) -> int:
+        return hash((self.id, type(self.id)))
+    
+def get_vertex(vertex: Union[Vertex, int, float, str]) -> Vertex:
+    return vertex if isinstance(vertex, Vertex) else Vertex(vertex)
+
+class Edge:
+    def __init__(self, u: Vertex, v: Vertex) -> None:
+        u = get_vertex(u)
+        v = get_vertex(v)
+        if u == v:
+            raise ValueError("loops do not exist in undirected graphs")
+        self.u, self.v = sorted([u, v])
+
+    def __repr__(self) -> str:
+        return f"Edge({self.u}, {self.v})"
+
+    def __eq__(self, other: 'Edge') -> bool:
+        return {self.u, self.v} == {other.u, other.v}
+    
+    def __lt__(self, other: 'Edge') -> bool:
+        return (self.u, self.v) < (other.u, other.v)
+
+    def __contains__(self, vertex: Vertex) -> bool:
+        vertex = get_vertex(vertex)
+        return vertex in {self.u, self.v}
+    
+    def __hash__(self) -> int:
+        return hash(frozenset([self.u, self.v]))
 
 class Graph:
     def __init__(self, id: Union[int, str, float], vertices: Optional[Iterable[Union[Vertex, int, str, float]]] = None, edges: Optional[Iterable[Union[Edge, tuple]]] = None) -> None:
-        if not (isinstance(id, int) or isinstance(id, str) or isinstance(id, float)):
+        if not (isinstance(id, (int, str, float))):
             raise ValueError("id must be of type int, char, or float")
         self.id = id
         self.vertices: Set[Vertex] = set()
@@ -20,10 +72,7 @@ class Graph:
 
         if edges is not None:
             for edge in edges:
-                if isinstance(edge, tuple) and len(edge) == 2:
-                    self.add_edge(edge[0], edge[1])
-                elif isinstance(edge, Edge):
-                    self.add_edge(edge)
+                self.add_edge(edge)
 
     def order(self) -> int:
         return len(self.vertices)
@@ -32,68 +81,35 @@ class Graph:
         return len(self.edges)
     
     def degree(self, vertex: Union[Vertex, int, str, float]) -> int:
-        if not isinstance(vertex, Vertex):
-            vertex = Vertex(vertex)
+        vertex = get_vertex(vertex)
 
         if vertex not in self.vertices:
             raise ValueError("Vertex not in graph")
 
-        degree = 0
-        for edge in self.edges:
-            if vertex in edge:
-                degree += 1
+        return sum(vertex in edge for edge in self.edges)
 
-        return degree
-
-    def add_vertex(self, vertex: Union[Vertex, int, str, float]) -> Vertex:
-        if not isinstance(vertex, Vertex):
-            vertex = Vertex(vertex)
+    def add_vertex(self, vertex: Union[Vertex, int, str, float]) -> None:
+        vertex = get_vertex(vertex)
         self.vertices.add(vertex)
-        return vertex
     
     def del_vertex(self, vertex: Union[Vertex, int, str, float]) -> None:
-        if not isinstance(vertex, Vertex):
-            for v in self.vertices:
-                if v.id == vertex:
-                    vertex = v
-                    break
-            else:
-                return
-        
-        edges_to_remove = [edge for edge in self.edges if vertex in edge]
-        for edge in edges_to_remove:
-            self.edges.remove(edge)
-        
-        self.vertices.remove(vertex)
+        vertex = get_vertex(vertex)
+        if vertex in self.vertices:
+            self.edges = {edge for edge in self.edges if vertex not in edge}
+            self.vertices.remove(vertex)
 
-    def add_edge(self, u: Union[Edge, Vertex, int, str, float], v: Union[Vertex, int, str, float] = None) -> Edge:
-        if isinstance(u, Edge):
-            edge = u
-            self.add_vertex(edge.u)
-            self.add_vertex(edge.v)
-        else:
-            u_vertex = self.add_vertex(u)
-            v_vertex = self.add_vertex(v)
-            edge = Edge(u_vertex, v_vertex)
-
-        if edge not in self:
-            self.edges.add(edge)
-        return edge
+    def add_edge(self, edge: Union[Edge, tuple]) -> None:
+        if not isinstance(edge, Edge):
+            edge = Edge(*[get_vertex(v) for v in edge])
+        
+        self.vertices.update([edge.u, edge.v])
+        self.edges.add(edge)
     
-    def del_edge(self, u: Union[Edge, Vertex, int, str, float], v: Union[Vertex, int, str, float] = None) -> None:
-        if isinstance(u, Edge):
-            edge = u
-            self.add_vertex(edge.u)
-            self.add_vertex(edge.v)
-        else:
-            u_vertex = self.add_vertex(u)
-            v_vertex = self.add_vertex(v)
-            edge = Edge(u_vertex, v_vertex)
+    def del_edge(self, edge: Union[Edge, tuple]) -> None:
+        if not isinstance(edge, Edge):
+            edge = Edge(*[get_vertex(v) for v in edge])
 
-        for e in self.edges:
-            if e == edge:
-                self.edges.remove(e)
-                return
+        self.edges.discard(edge)
 
     def complement(self) -> 'Graph':
         complement_graph = Graph(f"Complement of {self.id}")
@@ -105,7 +121,7 @@ class Graph:
         for i, u in enumerate(vertices_list):
             for v in vertices_list[i+1:]:
                 if Edge(u, v) not in self:
-                    complement_graph.add_edge(u, v)
+                    complement_graph.add_edge((u, v))
 
         return complement_graph
     

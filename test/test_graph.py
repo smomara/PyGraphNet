@@ -1,8 +1,6 @@
 import unittest
 import numpy as np
-from graphent.vertex import Vertex
-from graphent.edge import Edge
-from graphent.graph import Graph
+from graphent.graph import Edge, Graph
 
 class TestGraph(unittest.TestCase):
     def test_init(self):
@@ -13,7 +11,7 @@ class TestGraph(unittest.TestCase):
             Graph([], [])
 
     def test_basic_ops(self):
-        g = Graph("G", ['a', 'b', 'c'], [Edge('a', 'b'), Edge('b', 'c')])
+        g = Graph("G", ['a', 'b', 'c'], [('a', 'b'), ('b', 'c')])
 
         self.assertEqual(g.order(), 3)
         self.assertEqual(g.size(), 2)
@@ -24,12 +22,12 @@ class TestGraph(unittest.TestCase):
         self.assertFalse('e' in g)
         self.assertFalse(Edge('a', 'c') in g)
 
-        g.del_edge('a', 'b')
+        g.del_edge(('a', 'b'))
         self.assertTrue(Edge('a', 'b') not in g)
         self.assertEqual(g.order(), 3)
         self.assertEqual(g.size(), 1)
 
-        g.add_edge('c', 'a')
+        g.add_edge(('c', 'a'))
         self.assertTrue(Edge('c', 'a') in g)
         self.assertEqual(g.order(), 3)
         self.assertEqual(g.size(), 2)
@@ -62,7 +60,7 @@ class TestGraph(unittest.TestCase):
         self.assertEqual(g.distance('a', 'c'), 2)
         self.assertTrue(['a', 'b', 'c'] in g.geodesics('a', 'c'))
 
-        g.add_edge('a', 'e')
+        g.add_edge(('a', 'e'))
         self.assertEqual(g.diameter(), 2)
         self.assertEqual(g.distance('a', 'e'), 1)
         self.assertTrue(['a', 'e'] in g.geodesics('a', 'e'))

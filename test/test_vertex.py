@@ -1,5 +1,5 @@
 import unittest
-from graphent.vertex import Vertex
+from graphent.graph import Vertex
 
 class TestVertex(unittest.TestCase):
     def test_init(self):

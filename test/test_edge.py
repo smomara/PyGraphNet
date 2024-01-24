@@ -1,6 +1,5 @@
 import unittest
-from graphent.vertex import Vertex
-from graphent.edge import Edge
+from graphent.graph import Edge, Vertex
 
 class TestEdge(unittest.TestCase):
     def test_init(self):
