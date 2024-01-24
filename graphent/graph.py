@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Union, Set
+from typing import Union, Set, Optional, Iterable
 from itertools import permutations
 from collections import deque
 
@@ -7,10 +7,29 @@ from graphent.vertex import Vertex
 from graphent.edge import Edge
 
 class Graph:
-    def __init__(self, id: Union[int, str, float]) -> None:
+    def __init__(self, id: Union[int, str, float], vertices: Optional[Iterable[Union[Vertex, int, str, float]]] = None, edges: Optional[Iterable[Union[Edge, tuple]]] = None) -> None:
+        if not (isinstance(id, int) or isinstance(id, str) or isinstance(id, float)):
+            raise ValueError("id must be of type int, char, or float")
         self.id = id
         self.vertices: Set[Vertex] = set()
         self.edges: Set[Edge] = set()
+
+        if vertices is not None:
+            for vertex in vertices:
+                self.add_vertex(vertex)
+
+        if edges is not None:
+            for edge in edges:
+                if isinstance(edge, tuple) and len(edge) == 2:
+                    self.add_edge(edge[0], edge[1])
+                elif isinstance(edge, Edge):
+                    self.add_edge(edge)
+
+    def order(self) -> int:
+        return len(self.vertices)
+    
+    def size(self) -> int:
+        return len(self.edges)
 
     def add_vertex(self, vertex: Union[Vertex, int, str, float]) -> Vertex:
         if not isinstance(vertex, Vertex):
@@ -59,10 +78,10 @@ class Graph:
 
         for e in self.edges:
             if e == edge:
-                self.edge.remove(e)
+                self.edges.remove(e)
                 return
 
-    def get_complement(self) -> 'Graph':
+    def complement(self) -> 'Graph':
         complement_graph = Graph(f"Complement of {self.id}")
 
         for vertex in self.vertices:
