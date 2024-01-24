@@ -43,7 +43,7 @@ class Graph:
             v_vertex = self.add_vertex(v)
             edge = Edge(u_vertex, v_vertex)
 
-        if not self.is_edge(edge):
+        if edge not in self:
             self.edges.add(edge)
         return edge
     
@@ -61,9 +61,6 @@ class Graph:
             if e == edge:
                 self.edge.remove(e)
                 return
-    
-    def is_edge(self, e: Edge) -> bool:
-        return e in self.edges
 
     def get_complement(self) -> 'Graph':
         complement_graph = Graph(f"Complement of {self.id}")
@@ -71,10 +68,10 @@ class Graph:
         for vertex in self.vertices:
             complement_graph.add_vertex(vertex)
 
-        sorted_vertices = sorted(self.vertices, key=lambda v: v.id)
-        for i, u in enumerate(sorted_vertices):
-            for v in sorted_vertices[i + 1:]:
-                if not self.is_edge(Edge(u, v)):
+        vertices_list = list(self.vertices)
+        for i, u in enumerate(vertices_list):
+            for v in vertices_list[i+1:]:
+                if Edge(u, v) not in self:
                     complement_graph.add_edge(u, v)
 
         return complement_graph
@@ -154,6 +151,15 @@ class Graph:
             if np.array_equal(permuted, other_matrix):
                 return True
         return False
+    
+    def __contains__(self, x: Union[Edge, Vertex, int, float, str]) -> bool:
+        if isinstance(x, Edge):
+            for edge in self.edges:
+                if x == edge: return True
+            return False
+        if not isinstance(x, Vertex):
+            x = Vertex(x)
+        return x in self.vertices
     
     def __str__(self) -> str:
         vertices_str = ', '.join(str(v) for v in sorted(self.vertices))

@@ -9,7 +9,7 @@ class Edge:
         return f"Edge({self.u}, {self.v})"
 
     def __eq__(self, other: 'Edge') -> bool:
-        return self.u == other.u and self.v == other.v or self.u == other.v and self.v == other.u
+        return (self.u == other.u and self.v == other.v) or (self.u == other.v and self.v == other.u)
 
     def __contains__(self, vertex: Vertex) -> bool:
         return self.u == vertex or self.v == vertex
