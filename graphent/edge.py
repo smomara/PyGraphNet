@@ -7,11 +7,14 @@ class Edge:
         self.u = u
         self.v = v
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return f"Edge({self.u}, {self.v})"
 
     def __eq__(self, other: 'Edge') -> bool:
         return (self.u == other.u and self.v == other.v) or (self.u == other.v and self.v == other.u)
+    
+    def __lt__(self, other: 'Edge') -> bool:
+        return (self.u < other.u or self.u < other.v or self.v < other.u or self.v < other.v)
 
     def __contains__(self, vertex: Vertex) -> bool:
         return self.u == vertex or self.v == vertex

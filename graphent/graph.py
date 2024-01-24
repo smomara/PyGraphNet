@@ -131,7 +131,7 @@ class Graph:
                     max_distance = max(max_distance, distance)
         return max_distance
 
-    def get_adjacency_matrix(self) -> np.ndarray:
+    def adjacency_matrix(self) -> np.ndarray:
         vertex_list = sorted(self.vertices)
         index_map = {v: i for i, v in enumerate(vertex_list)}
         matrix = np.zeros((len(vertex_list), len(vertex_list)), dtype=int)
@@ -142,9 +142,9 @@ class Graph:
 
         return matrix
 
-    def get_incidence_matrix(self) -> np.ndarray:
+    def incidence_matrix(self) -> np.ndarray:
         vertex_list = sorted(self.vertices)
-        edge_list = list(self.edges)
+        edge_list = sorted(self.edges)
         vertex_index_map = {v: i for i, v in enumerate(vertex_list)}
         edge_index_map = {e: i for i, e in enumerate(edge_list)}
         matrix = np.zeros((len(vertex_list), len(edge_list)), dtype=int)
@@ -158,12 +158,12 @@ class Graph:
 
         return matrix
     
-    def are_isomorphic(self, other: 'Graph') -> bool:
+    def isomorphic(self, other: 'Graph') -> bool:
         if len(self.vertices) != len(other.vertices) or len(self.edges) != len(other.edges):
             return False
         
-        self_matrix = self.get_adjacency_matrix()
-        other_matrix = other.get_adjacency_matrix()
+        self_matrix = self.adjacency_matrix()
+        other_matrix = other.adjacency_matrix()
 
         for p in permutations(range(len(self.vertices))):
             permuted = self_matrix[np.ix_(p, p)]
@@ -180,7 +180,7 @@ class Graph:
             x = Vertex(x)
         return x in self.vertices
     
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         vertices_str = ', '.join(str(v) for v in sorted(self.vertices))
         edges_str = ', '.join(str(e) for e in self.edges)
         return f"Graph {self.id}(Vertices({vertices_str}), Edges({edges_str}))"

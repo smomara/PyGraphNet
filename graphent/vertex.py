@@ -8,7 +8,7 @@ class Vertex:
             id = id.lower()
         self.id = id
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         return f"Vertex({self.id})"
 
     def __lt__(self, other: Union['Vertex', int, float, str]) -> bool:
@@ -19,7 +19,6 @@ class Vertex:
         oid = other.id
         if isinstance(sid, str): sid = ord(sid)-ord('a') 
         if isinstance(oid, str): oid = ord(oid)-ord('a')
-        print(sid, oid)
         return sid < oid
 
     def __eq__(self, other: Union['Vertex', int, float, str]) -> bool:

@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 from graphent.vertex import Vertex
 from graphent.edge import Edge
 from graphent.graph import Graph
@@ -62,3 +63,26 @@ class TestGraph(unittest.TestCase):
         self.assertEqual(g.distance('a', 'e'), 1)
 
         self.assertEqual(g.distance('a', 'a'), 0)
+    
+    def test_matrices(self):
+        vertices = ["a", "b", "c"]
+        edges = [("a", "b"), ("b", "c")]
+        g = Graph("G", vertices, edges)
+
+        expected_adjacency = np.array([
+            [0, 1, 0],
+            [1, 0, 1],
+            [0, 1, 0]
+        ])
+
+        expected_incidence = np.array([
+            [1, 0],
+            [1, 1],
+            [0, 1]
+        ])
+
+        adjacency_matrix = g.adjacency_matrix()
+        self.assertTrue(np.array_equal(adjacency_matrix, expected_adjacency))
+
+        incidence_matrix = g.incidence_matrix()
+        self.assertTrue(np.array_equal(incidence_matrix, expected_incidence))
