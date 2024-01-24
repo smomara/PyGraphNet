@@ -2,6 +2,8 @@ from graphent.vertex import Vertex
     
 class Edge:
     def __init__(self, u: Vertex, v: Vertex) -> None:
+        if u == v:
+            raise ValueError("loops do not exist in undirected graphs")
         self.u = u
         self.v = v
 
