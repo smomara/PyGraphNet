@@ -15,14 +15,12 @@ class Vertex:
         return f"Vertex({self.id})"
 
     def __lt__(self, other: Union['Vertex', int, float, str]) -> bool:
-        if not isinstance(other, Vertex):
-            other = Vertex(other)
-        
-        sid = self.id
-        oid = other.id
-        if isinstance(sid, str): sid = ord(sid)-ord('a') 
-        if isinstance(oid, str): oid = ord(oid)-ord('a')
-        return sid < oid
+        other_id = other.id if isinstance(other, Vertex) else other
+        return self._comparable_id(self.id) < self._comparable_id(other_id)
+
+    @staticmethod
+    def _comparable_id(id):
+        return ord(id)-ord('a') if isinstance(id, str) else id
 
     def __eq__(self, other: Union['Vertex', int, float, str]) -> bool:
         if not isinstance(other, Vertex): other = Vertex(other)
