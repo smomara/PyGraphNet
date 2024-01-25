@@ -28,3 +28,21 @@ def visualize(graph: Graph, filename=None, format='png', output_dir=None, notebo
         display(Image(filename=f"{file_path}.{format}"))
     else:
         print(f"Graph rendered as {file_path}.{format}")
+
+def path(n: int) -> Graph:
+    vertices = [str(i+1) for i in range(n)]
+    edges = [(u, v) for u, v in zip(vertices, vertices[1:])]
+    p = Graph(f"P{n}", vertices=vertices, edges=edges)
+    return p
+
+def cycle(n: int) -> Graph:
+    vertices = [str(i+1) for i in range(n)]
+    edges = [(u, v) for u, v in zip(vertices, vertices[1:] + [vertices[0]])]
+    c = Graph(f"C{n}", vertices=vertices, edges=edges)
+    return c
+
+def complete_graph(n: int) -> Graph:
+    vertices = [str(i+1) for i in range(n)]
+    edges = [(u, v) for i, u in enumerate(vertices) for v in vertices[i+1:]]
+    k = Graph(f"K{n}", vertices=vertices, edges=edges)
+    return k

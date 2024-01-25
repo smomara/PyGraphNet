@@ -52,6 +52,13 @@ class Edge:
     def __hash__(self) -> int:
         return hash(frozenset([self.u, self.v]))
 
+'''
+POTENTIAL REFACTORS:
+- make functions like isomorphic and complement non-member functions
+
+TODOS
+- add operations (join, cartesian product, equals, subset)
+'''
 class Graph:
     def __init__(self, id: Union[int, str, float] = None, vertices: Optional[Iterable[Union[Vertex, int, str, float]]] = None, edges: Optional[Iterable[Union[Edge, tuple]]] = None) -> None:
         if id and not (isinstance(id, (int, str, float))):
