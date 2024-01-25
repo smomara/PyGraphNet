@@ -4,7 +4,7 @@ graphent is an intuitive and straightforward Python library tailored for graph t
 
 ## Installation
 
-## Install From Source
+### Install From Source
 To install graphent from source, follow these steps:
 1. Clone the repository:
 ```bash
@@ -18,7 +18,7 @@ cd graphent
 ```bash
 sudo python3 -m pip install -e .
 ```
-## Direct Installation
+### Direct Installation
 For a quicker intsallation, use the following command:
 ```bash
 python3 -m pip install git+https://github.com/smomara/graphent.git
