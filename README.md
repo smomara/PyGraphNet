@@ -17,7 +17,7 @@ python3 -m pip install git+https://github.com/smomara/graphent.git
 ## Usage
 
 ### Examples
-A basic usage ![example](https://github.com/smomara/graphent/blob/main/examples/word_graph.ipynb) is available in the `examples` folder of the repository. Increasingly complex examples will be added as development continues.
+A ![basic usage example](https://github.com/smomara/graphent/blob/main/examples/word_graph.ipynb) of a word graph is available in the `examples` folder of the repository. Increasingly complex examples will be added as development continues.
 
 ## Development
 This library is under active development and any contributions are more than welcome.
