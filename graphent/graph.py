@@ -5,10 +5,6 @@ from collections import deque
 
 class Vertex:
     def __init__(self, id: Union[int, str, float]) -> None:
-        if isinstance(id, str):
-            if len(id) > 1:
-                raise ValueError("id must be a single character string")
-            id = id.lower()
         self.id = id
 
     def __repr__(self) -> str:
@@ -20,7 +16,7 @@ class Vertex:
 
     @staticmethod
     def _comparable_id(id):
-        return ord(id)-ord('a') if isinstance(id, str) else id
+        return str(id)
 
     def __eq__(self, other: Union['Vertex', int, float, str]) -> bool:
         if not isinstance(other, Vertex): other = Vertex(other)
@@ -57,8 +53,8 @@ class Edge:
         return hash(frozenset([self.u, self.v]))
 
 class Graph:
-    def __init__(self, id: Union[int, str, float], vertices: Optional[Iterable[Union[Vertex, int, str, float]]] = None, edges: Optional[Iterable[Union[Edge, tuple]]] = None) -> None:
-        if not (isinstance(id, (int, str, float))):
+    def __init__(self, id: Union[int, str, float] = None, vertices: Optional[Iterable[Union[Vertex, int, str, float]]] = None, edges: Optional[Iterable[Union[Edge, tuple]]] = None) -> None:
+        if id and not (isinstance(id, (int, str, float))):
             raise ValueError("id must be of type int, char, or float")
         self.id = id
         self.vertices: Set[Vertex] = set()
@@ -239,6 +235,7 @@ class Graph:
         return x in self.vertices
     
     def __repr__(self) -> str:
+        id_str = "Graph" + (f" {self.id}" if self.id else "")
         vertices_str = ', '.join(str(v) for v in sorted(self.vertices))
         edges_str = ', '.join(str(e) for e in self.edges)
-        return f"Graph {self.id}(Vertices({vertices_str}), Edges({edges_str}))"
+        return f"{id_str}(Vertices({vertices_str}), Edges({edges_str}))"

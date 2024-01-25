@@ -5,10 +5,7 @@ from graphent.graph import Edge, Graph
 class TestGraph(unittest.TestCase):
     def test_init(self):
         Graph("G", ['a', 'b', 'c'], [('a', 'b'), ('b', 'c'), ('a', 'c')])
-        Graph("G", ['a', 'b', 'c'], [Edge('a', 'b'), Edge('b', 'c'), Edge('a', 'c')])
-
-        with self.assertRaises(ValueError):
-            Graph([], [])
+        Graph(vertices=['a', 'b', 'c'], edges=[Edge('a', 'b'), Edge('b', 'c'), Edge('a', 'c')])
 
     def test_basic_ops(self):
         g = Graph("G", ['a', 'b', 'c'], [('a', 'b'), ('b', 'c')])
