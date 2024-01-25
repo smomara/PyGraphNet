@@ -2,11 +2,9 @@
 
 graphent is an intuitive and straightforward Python library tailored for graph theory experimentation. This project originated from a personal need to explore and understand graph theory concepts during a graph theory course. It's perfect for anyone interested in delving into graph theory, whether for academic, professional, or personal learning purposes.
 
-## Getting Started
+## Installation
 
-### Installation
-
-#### Install From Source
+## Install From Source
 To install graphent from source, follow these steps:
 1. Clone the repository:
 ```bash
@@ -20,17 +18,12 @@ cd graphent
 ```bash
 sudo python3 -m pip install -e .
 ```
-#### Direct Installation
+## Direct Installation
 For a quicker intsallation, use the following command:
 ```bash
 python3 -m pip install git+https://github.com/smomara/graphent.git
 ```
-## Usage and Examples
-
-### Quick Start
-After installtion, you can start using grpahent to create and manipulate graphs. The library is designed to be user-friendly and easy to understand, even for those new to graph theory.
-
-### Exploring Examples
+## Examples
 I have included a ![basic usage example](https://github.com/smomara/graphent/blob/main/examples/word_graph.ipynb) of a word graph is available in the `examples` folder of the repository. I am constantly updating this section with increasingly complex examples as development continues, so stay tuned!
 
 ## Contributing
