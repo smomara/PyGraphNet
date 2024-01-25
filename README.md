@@ -32,11 +32,12 @@ graphent is an open-source project under rapid active development, and contribut
 ### Running Tests
 Before submitting a pull request, please ensure all test pass. Here's how you can run the tests locally:
 
-- For running a specific test suite, such as edge tests: 
-`
+For running a specific test suite, such as edge tests:
+```bash
 python3 test/test_edge.py
-`
-- For running the entire test suite: 
-`
+```
+
+For running the entire test suite:
+```bash
 pytest test/
-`
+```
