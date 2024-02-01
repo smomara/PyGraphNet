@@ -1,8 +1,8 @@
-# graphent: A Python Library for Graph Theory Experiments
+# PyGraphNet: A Python Library for Network Analysis
 
-graphent is an intuitive and straightforward Python library tailored for graph theory experimentation. This project originated from a personal need to explore and understand graph theory concepts during a graph theory course. It's perfect for anyone interested in delving into graph theory, whether for academic, professional, or personal learning purposes.
+PyGraphNet is an intuitive and straightforward Python library tailored for graph theory experimentation. This project originated from a personal need to explore and understand graph theory concepts during a graph theory course. It's perfect for anyone interested in delving into graph theory, whether for academic, professional, or personal learning purposes.
 
-## Installation
+## Installations
 
 ### Install From Source
 To install graphent from source, follow these steps:
