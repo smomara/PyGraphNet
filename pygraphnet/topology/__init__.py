@@ -1,6 +1,6 @@
 import heapq
 
-__all__ = ['shortest_distance', 'shortest_path']
+__all__ = ['shortest_distance', 'shortest_path', 'diameter']
 
 """
 distance and paths
@@ -12,47 +12,13 @@ distance and paths
     all_predecessors
     all_paths
     all_circuits
-    pseudo_diameter
+    diameter
 
 graph comparison
-    similarity
-    vertex_similarity
     isomorphism
-    subgraph_isomorphism
-    mark_subgraph
-    max_cliques
-
-matching and independent sets
-    max_cardinality_matching
-    max_independent_vertex_set
-
-spanning tree
-    min_spanning_tree
-    random_spanning_tree
-
-sorting and closure
-    dominator_tree
-    topological_sort
-    transitive_closure
 
 components and connectivity
     label_components
-    label_biconnected_components
-    label_largest_component
-    extract_largest_component
-    label_out_component
-    vertex_percolation
-    edge_percolation
-    kcore_decomposition
-
-graph classification
-    is_bipartite
-    is_DAG
-    is_planar
-    make_maximal_planar
-
-directionality
-    edge_reciprocity
 """
 
 # Distance and paths
@@ -126,3 +92,16 @@ def shortest_path(g, source, target, weights=None):
         current_vertex = predecessor
 
     return path_vertices, path_edges
+
+def diameter(g, weights=None):
+    dist_map = shortest_distance(g, weights=weights)
+
+    max_distance = 0
+    end_points = ()
+    for source, value in dist_map.items():
+        for target, distance in value.items():
+            if distance > max_distance:
+                max_distance = distance
+                end_points = (source, target)
+    
+    return max_distance, end_points
