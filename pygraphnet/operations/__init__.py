@@ -7,6 +7,8 @@ graph operations
     complement
 """
 
+__all__ = ['cross_product', 'complement']
+
 def cross_product(g1, g2):
     """
     Creates the Cartesian product of two graphs. If either of the input graphs is directed,
