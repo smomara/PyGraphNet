@@ -85,6 +85,12 @@ class TestGraph(unittest.TestCase):
         self.assertIn((0, 1), g.edges)
         self.assertNotIn((1, 0), g.edges)
 
+    def test_add_edge_bidirectional(self):
+        g = Graph(directed=True)
+        g.add_edge(0, 1, bidirectional=True)
+        self.assertIn((0, 1), g.edges)
+        self.assertIn((1, 0), g.edges)
+        
     def test_add_edge_undirected(self):
         g = Graph(directed=False)
         g.add_vertex(0)

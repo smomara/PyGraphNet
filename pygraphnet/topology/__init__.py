@@ -1,25 +1,16 @@
 import heapq
 
-__all__ = ['shortest_distance', 'shortest_path', 'diameter']
-
 """
 distance and paths
     shortest_distance
     shortest_path
-    random_shortest_path
-    count_shortest_paths
-    all_shortest_paths
-    all_predecessors
-    all_paths
-    all_circuits
     diameter
 
 graph comparison
-    isomorphism
-
-components and connectivity
-    label_components
+    isomorphism (TODO)
 """
+
+__all__ = ['shortest_distance', 'shortest_path', 'diameter']
 
 # Distance and paths
 def shortest_distance(g, source=None, target=None, weights=None, pred_map=False):
