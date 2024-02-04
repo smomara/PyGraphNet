@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='graphent',
-    version='0.1.0',
-    description='A simple graph library',
+    name='PyGraphNet',
+    version='0.0.1',
+    description='A network analysis library',
     author='Sean O\'Mara',
     author_email='omarams@cua.edu',
     packages=find_packages(),
